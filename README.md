@@ -1,94 +1,94 @@
 # taiwan-holiday-skills
 
-Claude Agent Skills for working with Taiwan public holidays. Compatible with [Claude Code](https://claude.com/claude-code), [claude.ai](https://claude.ai), and any agent loader that supports the [Anthropic Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) format (e.g. [OpenSkills](https://github.com/numman-ali/openskills)).
+處理台灣國定假日的 Claude Agent Skills 套件。相容於 [Claude Code](https://claude.com/claude-code)、[claude.ai](https://claude.ai),以及任何支援 [Anthropic Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) 格式的 agent loader（例如 [OpenSkills](https://github.com/numman-ali/openskills)）。
 
-## Skills in this repo
+## 本 repo 包含的 Skills
 
 ### [`taiwan-holiday/`](./taiwan-holiday/SKILL.md)
 
-Wraps the [`taiwan-holiday-cli`](https://github.com/lis186/taiwan-holiday-cli) npm package. Lets Claude answer questions like "下個月有幾個工作天?", "10/10 是禮拜幾?", "下一個連假什麼時候?" with authoritative, structured data — without the model second-guessing itself or telling the user to "verify with the official announcement".
+封裝 [`taiwan-holiday-cli`](https://github.com/lis186/taiwan-holiday-cli) 這個 npm 套件。讓 Claude 可以直接回答像「下個月有幾個工作天?」、「10/10 是禮拜幾?」、「下一個連假什麼時候?」這類問題,並提供權威、結構化的資料 —— 不會再讓模型自己猜,也不會丟一句「請以官方公告為準」就交差。
 
-Trigger phrases (auto-detected by the description): any Taiwan + date question, working-day math, leave planning, compensatory days (補假/補班日), upcoming holidays.
+觸發語句（由 description 自動偵測）：任何「台灣 + 日期」的問題、工作天計算、請假規劃、補假/補班日、即將到來的假期。
 
-## Install
+## 安裝方式
 
-### Option A — OpenSkills (recommended for cross-tool agents)
+### 方案 A —— OpenSkills（跨工具 agent 推薦使用）
 
 ```bash
 npx openskills install lis186/taiwan-holiday-skills
 npx openskills sync
 ```
 
-This drops the `taiwan-holiday/` folder into your project's `.claude/skills/` (or `.agent/skills/` if you used `--universal`). Add `--global` to install into `~/.claude/skills/` instead.
+會把 `taiwan-holiday/` 資料夾放進你專案的 `.claude/skills/`（如果用了 `--universal` 則放進 `.agent/skills/`）。加上 `--global` 則改安裝到 `~/.claude/skills/`。
 
-### Option B — Claude Code native (manual)
+### 方案 B —— Claude Code 原生安裝（手動）
 
 ```bash
-# project-level
+# 專案層級
 git clone https://github.com/lis186/taiwan-holiday-skills.git /tmp/ths
 mkdir -p .claude/skills
 cp -r /tmp/ths/taiwan-holiday .claude/skills/
 
-# global (any project picks it up)
+# 全域（所有專案都可使用）
 mkdir -p ~/.claude/skills
 cp -r /tmp/ths/taiwan-holiday ~/.claude/skills/
 ```
 
-### Option C — git submodule (always track upstream)
+### 方案 C —— git submodule（隨時追蹤上游版本）
 
 ```bash
 git submodule add https://github.com/lis186/taiwan-holiday-skills.git .claude/skills/_taiwan-holiday-skills
 ln -s _taiwan-holiday-skills/taiwan-holiday .claude/skills/taiwan-holiday
 ```
 
-## Verifying the install
+## 驗證安裝
 
-After installing, open Claude Code in any project and ask:
+安裝完成後,在任一個專案打開 Claude Code,輸入：
 
 ```
 下個月有幾個工作天?
 ```
 
-Claude should run `npx --yes taiwan-holiday-cli workdays <year> <month> -f json` in the background and answer with the exact number, no hedging.
+Claude 應該會在背景執行 `npx --yes taiwan-holiday-cli workdays <year> <month> -f json`,然後直接給你正確數字,不會含糊其詞。
 
-## Requirements
+## 系統需求
 
-- Node.js 20+ (for `npx`)
-- Network access on first run (`npx` downloads `taiwan-holiday-cli` ≈ 5–15s; subsequent runs hit the npx cache and are <3s)
+- Node.js 20+（執行 `npx` 用）
+- 第一次執行時需要網路（`npx` 會下載 `taiwan-holiday-cli`,約 5–15 秒；之後會用 npx cache,<3 秒）
 
-If you want to skip the first-run download, install once globally:
+如果不想等第一次下載,可以先全域安裝一次：
 
 ```bash
 npm install -g taiwan-holiday-cli
 ```
 
-The skill keeps invoking via `npx`; Node will short-circuit to the global install automatically.
+Skill 還是會用 `npx` 呼叫,但 Node 會自動跳到全域安裝的版本。
 
-## Supported years
+## 支援年份
 
-2017–2026. The underlying data source is [TaiwanCalendar](https://github.com/ruyut/TaiwanCalendar) (thanks [@ruyut](https://github.com/ruyut)). Data correctness is the responsibility of the upstream project — file issues there if you spot a bad date.
+2017–2026。底層資料來自 [TaiwanCalendar](https://github.com/ruyut/TaiwanCalendar)（感謝 [@ruyut](https://github.com/ruyut)）。資料正確性由上游專案負責 —— 如果發現日期錯誤,請去那邊回報 issue。
 
-## Limitations
+## 限制
 
-- Only ROC government calendar data — no lunar calendar, solar terms, or non-Taiwan holidays.
-- Doesn't do leave planning math, calendar sync, or notifications. The skill answers "what is this date?" — composing that into trip plans or alerts is up to you (or a separate skill on top).
-- Compensatory days (補假/補班日) come straight from the data source. If the cabinet adjusts the official 行政機關辦公日曆表 mid-year, you'll get the new value once `taiwan-holiday-cli` ships an updated package.
+- 只支援中華民國政府行事曆 —— 不含農曆、節氣或非台灣的假日。
+- 不做請假規劃、行事曆同步、通知提醒。Skill 只回答「這天是什麼?」 —— 要把這個資訊組合成行程規劃或提醒,得自己接（或另外做一個 skill 蓋上去）。
+- 補假/補班日完全依照資料來源。如果行政院年中調整官方「行政機關辦公日曆表」,要等 `taiwan-holiday-cli` 發新版本才會反映。
 
 ## Evals
 
-`taiwan-holiday/evals/evals.json` contains 3 realistic test prompts the skill is benchmarked against. Pass rate at the time of release: with-skill 100% / without-skill 83%, on these test cases. The largest gap is on the 2026/10 working-day count (補假 from 10/25 光復節 falling on a Sunday) — exactly the kind of compensatory rule that model memory routinely misses.
+`taiwan-holiday/evals/evals.json` 包含 3 個實際的測試 prompt,作為這個 skill 的 benchmark。發布時的通過率：有 skill 100%、無 skill 83%（基於這幾個測試案例）。差異最大的是 2026/10 的工作天數（10/25 光復節遇到禮拜天的補假）—— 這正是模型記憶最容易漏掉的補假規則。
 
-## Contributing
+## 貢獻
 
-Pull requests welcome — particularly for additional skills built on top of `taiwan-holiday-cli` (e.g. leave planning, ICS export). Please match the writing style of the existing `taiwan-holiday/SKILL.md`: imperative voice, explicit reasoning, examples in JSON when relevant.
+歡迎 PR —— 特別是基於 `taiwan-holiday-cli` 延伸的其他 skill（例如請假規劃、ICS 匯出）。寫作風格請對齊現有的 `taiwan-holiday/SKILL.md`：祈使句、明確推理、需要時用 JSON 舉例。
 
-## License
+## 授權
 
-MIT — see [LICENSE](./LICENSE).
+MIT —— 詳見 [LICENSE](./LICENSE)。
 
-## Related
+## 相關連結
 
-- [`taiwan-holiday-cli`](https://github.com/lis186/taiwan-holiday-cli) — the underlying CLI this skill wraps
-- [TaiwanCalendar](https://github.com/ruyut/TaiwanCalendar) — the data source
-- [Anthropic Agent Skills docs](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview)
-- [OpenSkills](https://github.com/numman-ali/openskills) — universal skill loader
+- [`taiwan-holiday-cli`](https://github.com/lis186/taiwan-holiday-cli) —— 本 skill 封裝的底層 CLI
+- [TaiwanCalendar](https://github.com/ruyut/TaiwanCalendar) —— 資料來源
+- [Anthropic Agent Skills 文件](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview)
+- [OpenSkills](https://github.com/numman-ali/openskills) —— 通用 skill loader
