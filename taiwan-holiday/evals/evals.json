@@ -1,0 +1,41 @@
+{
+  "skill_name": "taiwan-holiday",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我想跟老婆訂 5/1 那個週末出去玩，那是連假嗎？週六週日跟週一有沒有要補班？我們最晚禮拜一晚上要回來。",
+      "expected_output": "Identifies that 5/1 (Fri) 2026 is 勞動節, that 5/2 and 5/3 are weekends, and clearly states whether 5/4 (Mon) is a workday or makeup-workday. Should NOT confidently invent a 補班日 unless the CLI says so.",
+      "files": [],
+      "expectations": [
+        "Answer correctly identifies 2026-05-01 as 勞動節",
+        "Answer correctly states 2026-05-04 (Monday) is a regular workday with no 補班",
+        "Answer mentions or implies the 5/1–5/3 long weekend",
+        "No hallucinated holidays or makeup-workdays in the response"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "請問 2026 年 10 月有幾個工作天？我想排月底發年終預估。順便看一下 10/10 是禮拜幾。",
+      "expected_output": "Gives the exact workday count for October 2026 — CLI says 20 workdays, 11 holiday-or-weekend days, 0 makeup workdays — and correctly identifies 2026-10-10 as Saturday (週六) and 國慶日.",
+      "files": [],
+      "expectations": [
+        "Answer states 20 workdays in 2026-10 (or '20 個工作天')",
+        "Answer states 2026-10-10 is a Saturday (週六)",
+        "Answer mentions 10/10 is 國慶日",
+        "Answer does not invent a 補班日 in October 2026 (the CLI's makeupWorkdays is 0)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "接下來最近的三個國定假日是哪些？週末不算，我要排請假。",
+      "expected_output": "Lists the next 3 named national holidays from today (2026-04-24), excluding plain weekends. Should use `next 3 --skip-weekends` or filter manually. Each entry should include date, day-of-week, and the holiday name.",
+      "files": [],
+      "expectations": [
+        "Output excludes plain weekend entries (週末) — only named holidays",
+        "Output contains exactly 3 holidays",
+        "Each holiday has a date, day-of-week, and Chinese holiday name",
+        "Dates are in chronological order starting from on/after 2026-04-24"
+      ]
+    }
+  ]
+}

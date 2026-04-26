@@ -1,0 +1,6 @@
+.DS_Store
+node_modules/
+*.log
+
+# eval workspace artifacts (regenerated locally, not part of the published skill)
+*-workspace/
