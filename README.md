@@ -88,6 +88,7 @@ Claude 應該會在背景執行 `npx --yes taiwan-holiday-cli workdays <year> <m
 ## 系統需求
 
 - Node.js 20+（執行 `npx` 用）
+- `taiwan-holiday-cli` >= 2.0.0（`npx` 會自動抓最新版）。本 repo 以 git tag 標版，與 cli/mcp 共享 MAJOR 版號 —— 目前為 2.x 世代
 - 第一次執行時需要網路（`npx` 會下載 `taiwan-holiday-cli`，約 5–15 秒；之後會用 npx cache，<3 秒）
 
 如果不想等第一次下載，可以先全域安裝一次：
@@ -100,17 +101,17 @@ Skill 還是會用 `npx` 呼叫，但 Node 會自動跳到全域安裝的版本�
 
 ## 支援年份
 
-2017–2026。底層資料來自 [TaiwanCalendar](https://github.com/ruyut/TaiwanCalendar)（感謝 [@ruyut](https://github.com/ruyut)）。資料正確性由上游專案負責 —— 如果發現日期錯誤，請去那邊回報 issue。
+2017 年起，上限由上游資料決定 —— 上游發布新年度後自動支援，不需更新 CLI 或本 skill。執行 `npx --yes taiwan-holiday-cli years` 可查目前範圍。底層資料來自 [TaiwanCalendar](https://github.com/ruyut/TaiwanCalendar)（感謝 [@ruyut](https://github.com/ruyut)）。資料正確性由上游專案負責 —— 如果發現日期錯誤，請去那邊回報 issue。
 
 ## 限制
 
 - 只支援中華民國政府行事曆 —— 不含農曆、節氣或非台灣的假日。
 - 不做請假規劃、行事曆同步、通知提醒。Skill 只回答「這天是什麼?」 —— 要把這個資訊組合成行程規劃或提醒，得自己接（或另外做一個 skill 蓋上去）。
-- 補假/補班日完全依照資料來源。如果行政院年中調整官方「行政機關辦公日曆表」，要等 `taiwan-holiday-cli` 發新版本才會反映。
+- 補假/補班日完全依照資料來源。如果行政院年中調整官方「行政機關辦公日曆表」，要等上游 TaiwanCalendar 更新資料後才會反映（CLI 端另有 24 小時快取）。
 
 ## Evals
 
-`taiwan-holiday/evals/evals.json` 包含 3 個實際的測試 prompt，作為這個 skill 的 benchmark。發布時的通過率：有 skill 100%、無 skill 83%（基於這幾個測試案例）。差異最大的是 2026/10 的工作天數（10/25 光復節遇到禮拜天的補假）—— 這正是模型記憶最容易漏掉的補假規則。
+`taiwan-holiday/evals/evals.json` 包含 4 個實際的測試 prompt，作為這個 skill 的 benchmark。初版發布時以當時的 3 個案例量測的通過率：有 skill 100%、無 skill 83%。差異最大的是 2026/10 的工作天數（10/25 光復節遇到禮拜天的補假）—— 這正是模型記憶最容易漏掉的補假規則。
 
 ## 貢獻
 
