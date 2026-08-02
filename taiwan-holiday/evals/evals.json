@@ -28,13 +28,25 @@
     {
       "id": 3,
       "prompt": "接下來最近的三個國定假日是哪些？週末不算，我要排請假。",
-      "expected_output": "Lists the next 3 named national holidays from today (2026-04-24), excluding plain weekends. Should use `next 3 --skip-weekends` or filter manually. Each entry should include date, day-of-week, and the holiday name.",
+      "expected_output": "Lists the next 3 named national holidays from the current date, excluding plain weekends. Should use `next 3 --skip-weekends` or filter manually. Each entry should include date, day-of-week, and the holiday name.",
       "files": [],
       "expectations": [
         "Output excludes plain weekend entries (週末) — only named holidays",
         "Output contains exactly 3 holidays",
         "Each holiday has a date, day-of-week, and Chinese holiday name",
-        "Dates are in chronological order starting from on/after 2026-04-24"
+        "Dates are in chronological order starting from on/after the current date"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "2027 年國慶日是禮拜幾？會補假嗎？另外 2028 春節的日期也幫我看一下。",
+      "expected_output": "Uses the CLI for 2027: 2027-10-10 is a Sunday (週日) and 國慶日, with a 補假 on 2027-10-11 (Monday) per CLI data. For a year the upstream has not yet published (2028 at the time of writing, 2026-08), the CLI errors with 上游尚未發布 — the answer should relay that the data is not yet published instead of inventing dates from memory. NOTE: once upstream publishes 2028 data, update this case to use the then-unpublished year.",
+      "files": [],
+      "expectations": [
+        "Answer correctly identifies 2027-10-10 as 國慶日 falling on a Sunday (週日)",
+        "Answer identifies 2027-10-11 (Monday) as the 補假, per CLI data — not invented from memory",
+        "For the not-yet-published year, answer relays the CLI's 上游尚未發布 error rather than guessing dates",
+        "No hallucinated dates for the not-yet-published year in the response"
       ]
     }
   ]

@@ -1,12 +1,14 @@
 ---
 name: taiwan-holiday
-description: Query Taiwan national holidays, working-day counts, and compensatory days via the taiwan-holiday-cli npm package (invoked over npx, no install needed). Use this skill whenever the user asks anything that combines Taiwan with dates — whether it is "is X a holiday", "how many working days in May", "when is the next long weekend", "next Chinese New Year", planning leave, or any schedule question that depends on the 中華民國政府行政機關辦公日曆表. Also use it for any date-math question the user anchors to Taiwan (e.g. "我下個月工作幾天", "10/10 是什麼日子", "接下來連假"), even when the user does not say the word "holiday" explicitly. Prefer this skill over guessing from memory — the CLI has authoritative data for 2017–2026 and knows about makeup workdays that models frequently get wrong.
+description: Query Taiwan national holidays, working-day counts, and compensatory days via the taiwan-holiday-cli npm package (invoked over npx, no install needed). Use this skill whenever the user asks anything that combines Taiwan with dates — whether it is "is X a holiday", "how many working days in May", "when is the next long weekend", "next Chinese New Year", planning leave, or any schedule question that depends on the 中華民國政府行政機關辦公日曆表. Also use it for any date-math question the user anchors to Taiwan (e.g. "我下個月工作幾天", "10/10 是什麼日子", "接下來連假"), even when the user does not say the word "holiday" explicitly. Prefer this skill over guessing from memory — the CLI has authoritative data from 2017 onward (the upper bound follows the upstream data source; run `years` to check) and knows about makeup workdays that models frequently get wrong.
 allowed-tools: Bash
 ---
 
 # taiwan-holiday
 
 A thin wrapper around the `taiwan-holiday-cli` npm package. You call it with `npx`, parse its output, and answer the user in natural Chinese/English.
+
+Requires `taiwan-holiday-cli` >= 2.0.0 (year support is probed from the upstream data source at runtime; `npx` fetches the latest release, which satisfies this automatically).
 
 ## When to reach for this skill
 
@@ -19,7 +21,7 @@ Any question where the answer depends on the Taiwan public-holiday calendar. Com
 - Annual planning: "2026 全年國定假日", "下次春節哪幾天"
 - Compensatory / makeup days: "補班日", "補假" — important because model memory is often wrong here; always defer to the CLI.
 
-Do *not* use this skill for non-Taiwan holidays, religious observances outside the 中華民國政府行政機關辦公日曆表, or years outside 2017–2026 (check with `years` if unsure).
+Do *not* use this skill for non-Taiwan holidays or religious observances outside the 中華民國政府行政機關辦公日曆表. For years that might be out of range (before 2017, or future years the upstream may not have published yet), still run the CLI — it distinguishes "not yet published" from "outside the queryable window", and you should relay its answer instead of guessing (see Error handling).
 
 ## Invocation — always use `npx` like this
 
@@ -110,7 +112,7 @@ npx --yes taiwan-holiday-cli stats 2026 -f json       # full year breakdown
 npx --yes taiwan-holiday-cli stats 2026 10 -f json    # single month
 ```
 
-Returns totals plus a `holidayTypes` map (e.g. `"春節":3, "國慶日":1, "補假":12`). Good for "這一年放了哪些類別的假" questions.
+Returns totals plus a `holidayTypes` map (e.g. `"春節":3, "國慶日":1, "補假":6`). Good for "這一年放了哪些類別的假" questions.
 
 ### Metadata
 
@@ -118,7 +120,7 @@ Returns totals plus a `holidayTypes` map (e.g. `"春節":3, "國慶日":1, "補�
 npx --yes taiwan-holiday-cli years        # supported year range (plain text, no -f needed)
 ```
 
-Use this once if the user asks about a year you're unsure the CLI covers. Currently 2017–2026.
+Use this once if the user asks about a year you're unsure the CLI covers. The range starts at 2017; the upper bound follows the upstream data source and extends automatically when a new year is published — no CLI update needed.
 
 ## How to answer the user
 
@@ -132,7 +134,8 @@ Use this once if the user asks about a year you're unsure the CLI covers. Curren
 
 - `error: missing required argument 'month'` → you passed `2026-05` instead of `2026 5`. Fix and retry.
 - `sh: holiday: command not found` → you're running from a directory whose `package.json` lacks the bin. Re-run with `(cd /tmp && npx …)`.
-- `年份超出支援範圍` / year-out-of-range messages → run `npx --yes taiwan-holiday-cli years` to confirm the window, then tell the user the CLI can't help for that year (don't invent dates from memory).
+- `上游尚未發布 <year> 年資料` → the upstream source hasn't published that year yet (通常在前一年年中公布). Tell the user the data isn't available yet — don't invent dates from memory.
+- `年份 <year> 超出可查詢範圍` → outside the queryable window entirely (before 2017 or far future). The error message itself states the window — relay it and tell the user the CLI can't help for that year. (Note this window is wider than the published-data range that `years` reports.)
 - Network / download timeout on first run → the package is ~fast but npx download can be slow on cold cache; retry once, then surface the error to the user.
 
 ## Treat the CLI as authoritative — even when it conflicts with what you "know"
