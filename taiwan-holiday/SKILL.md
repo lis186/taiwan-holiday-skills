@@ -21,7 +21,7 @@ Any question where the answer depends on the Taiwan public-holiday calendar. Com
 - Annual planning: "2026 全年國定假日", "下次春節哪幾天"
 - Compensatory / makeup days: "補班日", "補假" — important because model memory is often wrong here; always defer to the CLI.
 
-Do *not* use this skill for non-Taiwan holidays, religious observances outside the 中華民國政府行政機關辦公日曆表, or years outside the supported range — it starts at 2017 and the upper bound follows the upstream data source (check with `years` if unsure).
+Do *not* use this skill for non-Taiwan holidays or religious observances outside the 中華民國政府行政機關辦公日曆表. For years that might be out of range (before 2017, or future years the upstream may not have published yet), still run the CLI — it distinguishes "not yet published" from "outside the queryable window", and you should relay its answer instead of guessing (see Error handling).
 
 ## Invocation — always use `npx` like this
 
@@ -135,7 +135,7 @@ Use this once if the user asks about a year you're unsure the CLI covers. The ra
 - `error: missing required argument 'month'` → you passed `2026-05` instead of `2026 5`. Fix and retry.
 - `sh: holiday: command not found` → you're running from a directory whose `package.json` lacks the bin. Re-run with `(cd /tmp && npx …)`.
 - `上游尚未發布 <year> 年資料` → the upstream source hasn't published that year yet (通常在前一年年中公布). Tell the user the data isn't available yet — don't invent dates from memory.
-- `年份 <year> 超出可查詢範圍` → outside the queryable window entirely (before 2017 or far future). Run `npx --yes taiwan-holiday-cli years` to confirm the current window, then tell the user the CLI can't help for that year.
+- `年份 <year> 超出可查詢範圍` → outside the queryable window entirely (before 2017 or far future). The error message itself states the window — relay it and tell the user the CLI can't help for that year. (Note this window is wider than the published-data range that `years` reports.)
 - Network / download timeout on first run → the package is ~fast but npx download can be slow on cold cache; retry once, then surface the error to the user.
 
 ## Treat the CLI as authoritative — even when it conflicts with what you "know"
