@@ -88,7 +88,7 @@ Claude 應該會在背景執行 `npx --yes taiwan-holiday-cli workdays <year> <m
 ## 系統需求
 
 - Node.js 20+（執行 `npx` 用）
-- `taiwan-holiday-cli` >= 2.0.0（`npx` 會自動抓最新版）。本 repo 以 git tag 標版，與 cli/mcp 共享 MAJOR 版號 —— 目前為 2.x 世代
+- `taiwan-holiday-cli` >= 2.0.0（`npx` 會自動抓最新版）。本 repo 以 git tag 標版，與 [`taiwan-holiday-cli`](https://github.com/lis186/taiwan-holiday-cli)/[`taiwan-holiday-mcp`](https://github.com/lis186/taiwan-holiday-mcp) 共享 MAJOR 版號 —— 目前為 2.x 世代
 - 第一次執行時需要網路（`npx` 會下載 `taiwan-holiday-cli`，約 5–15 秒；之後會用 npx cache，<3 秒）
 
 如果不想等第一次下載，可以先全域安裝一次：
@@ -124,6 +124,7 @@ MIT —— 詳見 [LICENSE](./LICENSE)。
 ## 相關連結
 
 - [`taiwan-holiday-cli`](https://github.com/lis186/taiwan-holiday-cli) —— 本 skill 封裝的底層 CLI
+- [`taiwan-holiday-mcp`](https://github.com/lis186/taiwan-holiday-mcp) —— 同一資料來源的 MCP server（Claude Desktop / Cursor 適用）
 - [TaiwanCalendar](https://github.com/ruyut/TaiwanCalendar) —— 資料來源
 - [Anthropic Agent Skills 文件](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview)
 - [OpenSkills](https://github.com/numman-ali/openskills) —— 通用 skill loader
