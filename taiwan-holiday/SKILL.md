@@ -8,7 +8,7 @@ allowed-tools: Bash
 
 A thin wrapper around the `taiwan-holiday-cli` npm package. You call it with `npx`, parse its output, and answer the user in natural Chinese/English.
 
-Requires `taiwan-holiday-cli` >= 2.1.0 (2.1.0 added the `typhoon` subcommand; holiday year support is probed from the upstream data source at runtime; `npx` fetches the latest release, which satisfies this automatically).
+Requires `taiwan-holiday-cli` >= 3.0.0 and Node.js 22+ (the `typhoon` subcommand arrived in 2.1.0; 3.x is the current generation shared with this skill; holiday year support is probed from the upstream data source at runtime; `npx` fetches the latest release, which satisfies this automatically).
 
 ## When to reach for this skill
 

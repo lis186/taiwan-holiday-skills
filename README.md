@@ -8,7 +8,7 @@
 
 封裝 [`taiwan-holiday-cli`](https://github.com/lis186/taiwan-holiday-cli) 這個 npm 套件。讓 Claude 可以直接回答像「下個月有幾個工作天?」、「10/10 是禮拜幾?」、「下一個連假什麼時候?」這類問題，並提供權威、結構化的資料 —— 不會再讓模型自己猜，也不會丟一句「請以官方公告為準」就交差。颱風假也一樣先給明確結論、標明是否定案；只有在即時資料還可能變動時，才附上「以縣市政府公告為準」提醒。
 
-觸發語句（由 description 自動偵測）：任何「台灣 + 日期」的問題、工作天計算、請假規劃、補假/補班日、即將到來的假期，以及颱風假／停班停課（需 `taiwan-holiday-cli` >= 2.1.0 的 `typhoon` 指令）。
+觸發語句（由 description 自動偵測）：任何「台灣 + 日期」的問題、工作天計算、請假規劃、補假/補班日、即將到來的假期，以及颱風假／停班停課（`taiwan-holiday-cli` 的 `typhoon` 指令）。
 
 ## 安裝方式
 
@@ -95,8 +95,8 @@ Claude 應該會執行 `npx --yes taiwan-holiday-cli typhoon 2024-10-31 -c 臺�
 
 ## 系統需求
 
-- Node.js 20+（執行 `npx` 用）
-- `taiwan-holiday-cli` >= 2.1.0（`npx` 會自動抓最新版）。本 repo 以 git tag 標版，與 [`taiwan-holiday-cli`](https://github.com/lis186/taiwan-holiday-cli)/[`taiwan-holiday-mcp`](https://github.com/lis186/taiwan-holiday-mcp) 共享 MAJOR 版號 —— 目前為 2.x 世代
+- Node.js 22+（執行 `npx` 用）
+- `taiwan-holiday-cli` >= 3.0.0（`npx` 會自動抓最新版）。本 repo 以 git tag 標版，與 [`taiwan-holiday-cli`](https://github.com/lis186/taiwan-holiday-cli)/[`taiwan-holiday-mcp`](https://github.com/lis186/taiwan-holiday-mcp) 共享 MAJOR 版號 —— 目前為 3.x 世代
 - 第一次執行時需要網路（`npx` 會下載 `taiwan-holiday-cli`，約 5–15 秒；之後會用 npx cache，<3 秒）
 
 如果不想等第一次下載，可以先全域安裝一次：
