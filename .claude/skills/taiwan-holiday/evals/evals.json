@@ -48,6 +48,30 @@
         "For the not-yet-published year, answer relays the CLI's 上游尚未發布 error rather than guessing dates",
         "No hallucinated dates for the not-yet-published year in the response"
       ]
+    },
+    {
+      "id": 5,
+      "prompt": "2022/10/17 桃園有停班停課嗎？",
+      "expected_output": "Runs `typhoon 2022-10-17 -c 桃園市 -f json` (archive). Result is conditional / basis forecast / reason null with three sub-area rows in 復興區: 三光里、高義里、華陵里 照常上班、停止上課; 三光國民小學 and 光華國民小學 停止上班、停止上課. The answer lists only those scopes, says the basis is the previous day's 「明天」 forecast with no same-day announcement (so it is final), and does not claim anything about unlisted areas.",
+      "files": [],
+      "expectations": [
+        "Answer says 桃園市 did not stop city-wide; only parts of 復興區 stopped",
+        "Answer lists 三光里、高義里、華陵里 as 停止上課 but 照常上班, and 三光國小、光華國小 as 停止上班、停止上課",
+        "Answer states the basis is the previous day's forecast (10/16 announcement) and treats it as final",
+        "Answer does not say the forecast may have been overturned, and does not claim 其餘地區照常"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "2024/10/31 台北有放颱風假嗎",
+      "expected_output": "Queries `typhoon 2024-10-31` with the full official name 臺北市 (or 台北市). Result is stopped / allDay for both work and school, basis own, reason null. If the model first passes `-c 台北` it gets a misleading `normal` with `cities: []` and a 「沒有『臺北』的記錄」 note — it must retry with the full name rather than answer 照常.",
+      "files": [],
+      "expectations": [
+        "Answer states 臺北市 stopped both work and school all day (停止上班、停止上課，全天) on 2024-10-31",
+        "Answer states the result is final (當日公告／已定案)",
+        "Answer does not say 臺北 had no typhoon day off or 照常",
+        "Answer cites the 行政院人事行政總處 announcement or its source URL"
+      ]
     }
   ]
 }
